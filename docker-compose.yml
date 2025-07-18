@@ -1,0 +1,72 @@
+# 참조 : https://docs.docker.com/compose/compose-file/compose-file-v3/
+version: "3"
+name: server-01
+# include: 
+#     - ./ipc-01/ipc-01.yml
+#     - ./brd-01/brd-01.yml
+#     - ./redis-01/redis-01.yml
+#     - ./nginx-01/nginx-01.yml
+services:
+    brd-01:     # 방송용
+        extends:
+            file: ./brd/brd.yml
+            service: brd
+        container_name: brd-01
+        hostname: brd-01
+          #ports:
+          # - "18161:8161"
+          #  - "61616:61616"
+          #  - "61617:61617"
+        networks:
+            wisevcs-01:
+                ipv4_address: 172.55.21.10
+                aliases:
+                - brd
+
+    ipc-01:     # 내부통신용
+        extends:
+            file: ./ipc/ipc.yml
+            service: ipc
+        container_name: ipc-01
+        hostname: ipc-01
+          #ports:
+          #  - "28161:8161"
+          #  - "62626:62626"
+          #  - "62627:62627"
+        networks:
+            wisevcs-01:
+               ipv4_address: 172.55.22.10
+               aliases:
+                    - ipc            
+    nginx-01:     
+        extends:
+            file: ./nginx/nginx.yml
+            service: nginx
+        container_name: nginx-01
+        hostname: nginx-01
+          #ports:
+          #  - 52001:52001
+        networks:
+            wisevcs-01:
+                ipv4_address: 172.55.23.10
+                aliases:
+                    - nginx
+
+    redis-01:
+        extends:
+            file: ./redis/redis.yml
+            service: redis
+        container_name: redis-01
+        hostname: redis-01
+          #ports:
+          #  - "56379:6379"
+        networks:
+            wisevcs-01:
+                ipv4_address: 172.55.24.10
+                aliases:
+                    - redis            
+networks:
+    wisevcs-01:
+        name: wisevcs-01
+        external: true
+        driver: bridge

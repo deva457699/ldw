@@ -1,0 +1,11 @@
+# 참조 : https://docs.docker.com/compose/compose-file/compose-file-v3/
+version: "3"
+name: nginx-01
+include: 
+  - ./nginx-01.yml
+
+networks:
+  wisevcs-01:
+    name: wisevcs-01
+    external: true
+    driver: bridge

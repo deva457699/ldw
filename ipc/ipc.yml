@@ -1,0 +1,33 @@
+# 참조 : https://docs.docker.com/compose/compose-file/compose-file-v3/
+version: "3"
+services:
+    ipc:     # 내부통신용
+        extends:
+            file: ../../conf/env.yml
+            service: default-config
+        # image: apache/activemq-artemis:2.31.0
+        # image: apache/activemq-artemis:2.31.2-alpine
+        image: apache/activemq-artemis:2.32.0
+        container_name: ipc
+        hostname: ipc
+        #user: "${UID_WISEVCS}:${GID_WISEVCS}"
+        user: "0:0"
+        deploy:
+          mode: replicated      
+          replicas: 1           #전체에서 한개만 생성한다.
+          restart_policy:
+            condition: any  # on-failure or any
+            delay: 5000s
+        environment:
+            - TZ=Asia/Seoul
+            - ARTEMIS_USER=wisevcs
+            - ARTEMIS_PASSWORD=wisevcs123!
+        ports:
+            - "28161:8161"
+            - "62626:62626"
+            - "62627:62627"
+        volumes:
+            # - ../../../data/ipc:/var/lib/artemis-instance
+            - ./etc-override:/var/lib/artemis-instance/etc-override
+
+        restart: always

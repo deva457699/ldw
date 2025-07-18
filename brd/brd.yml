@@ -1,0 +1,38 @@
+version: "3"
+services:
+    brd:     # 방송용
+        extends:
+            file: ../../conf/env.yml
+            service: default-config
+        # image: apache/activemq-artemis:2.31.0
+        # image: apache/activemq-artemis:2.31.2-alpine
+        image: apache/activemq-artemis:2.32.0
+        container_name: brd
+        hostname: brd
+        #user: "${UID_WISEVCS}:${GID_WISEVCS}"
+        user: "0:0"
+        deploy:
+            mode: replicated      
+            replicas: 1           #전체에서 한개만 생성한다.
+            restart_policy:
+                condition: any  # on-failure or any
+                delay: 5s
+        environment:
+            - TZ=Asia/Seoul
+            - ARTEMIS_USER=wisevcs
+            - ARTEMIS_PASSWORD=wisevcs123!
+        ports:
+            - "18161:8161"
+            - "61616:61616"
+            - "61617:61617"
+        volumes:
+            # - /eksys/wisevcs/v2/server/brd-01/data:/var/lib/artemis-instance
+            # - ../../../data/brd:/var/lib/artemis-instance
+            - ./etc-override:/var/lib/artemis-instance/etc-override
+              #- ./etc:/var/lib/artemis-instance/etc
+        # networks:
+        #     wisevcs-01:
+        #         ipv4_address: 172.55.20.10
+        #         aliases:
+        #         - brd
+        restart: always
