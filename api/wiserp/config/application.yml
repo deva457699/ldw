@@ -1,0 +1,10 @@
+# 참조 : https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+spring:
+  application:
+    name: wiserp
+  profiles:
+    active: ${WISEVCS_PROFILE}
+  cloud:
+    config:
+      enabled: false
+

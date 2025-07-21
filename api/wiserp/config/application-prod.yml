@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: wiserp
+  config:
+    activate:
+      on-profile: prod
+  artemis:
+    mode: native
+# JSP 지원
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+  cloud:
+    config:
+      enabled: false
+          
+# Service Post 설정
+server:
+  port: 59191
+  compression:
+    enabled: true
+  servlet:
+    jsp:
+      init-parameters:
+        #JSP수정시 서버 재시작없이 바로 적용될 수 있게 설정
+        development: true
+
+logging:
+  config: /eksys/wisevcs/v2/api/${spring.application.name}/config/logback-spring.xml
+  eksys:
+    type: default
+  file: 
+    path: /eksys/wisevcs/v2/api/${spring.application.name}/log
+    name: ${spring.application.name}         
+  logstash:
+    destination: office.eksys.co.kr:55000
+  level: 
+    root: INFO    
+                
+wiserp:
+  config:
+    use_cache: "0"
+  data:
+    tmrpf_path: /eksys/wisevcs/v2/api/${spring.application.name}/data/Region.TMRPF
+    cost_optimum: /eksys/wisevcs/v2/api/${spring.application.name}/data/Optimum.TMRPC 
+    cost_shortest: /eksys/wisevcs/v2/api/${spring.application.name}/data/Shortest.TMRPC
+  core: 
+    min: 20 
+    max: 100
+    wait: 5
+  activemq:
+    ipc0:
+      broker-url: tcp://ap-vip:62626?useKeepAlive=true
+      user: wisevcs_agent
+      password: activemq12312345
+      queue0: ${WISEVCS_SVC_CODE}:prod:wisevcs_queue_rp
+

@@ -1,0 +1,57 @@
+version: "3"
+name: api-01
+# include: 
+#     - ./wiserp-01/wiserp-01.yml
+#     - ./wisesms-01/wisesms-01.yml
+
+services:
+    wiserp-01:
+        extends:
+            file: ./wiserp/wiserp.yml
+            service: wiserp
+        container_name: wiserp-01
+        hostname: wiserp-01
+        ports:
+            - "59191:59191"
+        networks:
+            wisevcs-01:
+                ipv4_address: 172.55.11.10
+                aliases:
+                    - wiserp
+        restart: always
+
+    wiserp-02:
+        extends:
+            file: ./wiserp/wiserp.yml
+            service: wiserp
+        container_name: wiserp-02
+        hostname: wiserp-02
+        ports:
+            - "59192:59191"
+        networks:
+            wisevcs-01:
+                ipv4_address: 172.55.11.11
+                aliases:
+                    - wiserp
+        restart: always
+
+#    wisesms-01:
+#        extends:
+#            file: ./wisesms/wisesms.yml
+#            service: wisesms
+#        container_name: wisesms-01
+#        hostname: wisesms-01
+#        ports:
+#            - "59098:59098"
+#        networks:
+#            wisevcs-01:
+#                ipv4_address: 172.55.12.100
+#                aliases:
+#                    - wisesms
+#        restart: always
+
+networks:
+    wisevcs-01:
+        name: wisevcs-01
+        external: true
+        driver: bridge

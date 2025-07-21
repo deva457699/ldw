@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+	<springProperty scope="local" name="LOGSTASH_DEST" source="logging.logstash.destination" />
+	<springProperty scope="local" name="PROFILE" source="spring.profiles.active" />
+	
+	<appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%clr(%d{yyyy-MM-dd HH:mm:ss}){faint} %clr(%1.-1p) %clr([%15.15t]){faint} %clr(%-30.30logger{30}){cyan} %clr(:){faint} %m%n%wEx</Pattern>
+        </layout>        
+ 	</appender>        
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${HOSTNAME}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_PATH}/${HOSTNAME}_%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>3GB</totalSizeCap>
+		</rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss} %1.-1p [%15.15t] %-30.30logger{30} : %m%n%wEx</Pattern>
+        </layout>        
+	</appender> 
+<!--
+    <appender name="LOGSTASH" class="com.eksys.ext.logger.logback.logstash.LogstashTcpSocketAppender">
+        <destination>${LOGSTASH_DEST}</destination>
+        <encoder class="com.eksys.ext.logger.logback.logstash.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <mdc />
+                <context />
+                <logLevel />
+                <loggerName />
+                <pattern>
+                    <pattern>
+                        {
+                        "app": "${LOG_FILE}", "profile":"${PROFILE}"
+                        }
+                    </pattern>
+                </pattern>
+                <threadName />
+                <message />
+                <logstashMarkers />
+                <stackTrace />
+            </providers>
+        </encoder>
+    </appender>    
+-->    
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+        <!--
+        <appender-ref ref="LOGSTASH" />
+        -->
+    </root>
+
+    
+</configuration>
